@@ -29,7 +29,7 @@ class Possition:
 
 class Parser:
     def data_generator(self) -> tuple[str, int]:
-        with open("input_data.txt") as stream:
+        with open("./../../input_data.txt") as stream:
             for line in stream:
                 direction, units = line.split(" ")
                 yield direction, int(units)

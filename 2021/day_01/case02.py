@@ -5,7 +5,7 @@ class Application:
     data = []
 
     def __init__(self) -> None:
-        with open("input_data.txt") as stream:
+        with open("./../../input_data.txt") as stream:
             for line in stream:
                 num = int(line.removesuffix("\n"))
                 self.data.append(num)

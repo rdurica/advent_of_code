@@ -3,7 +3,7 @@
 
 class Application:
     def calculate(self):
-        with open("input_data.txt") as stream:
+        with open("./../../input_data.txt") as stream:
             num, previous_number, result_count = 0, 0, 0
             for i, line in enumerate(stream):
                 num = int(line.removesuffix("\n"))
