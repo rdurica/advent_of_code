@@ -1,48 +1,36 @@
 # https://adventofcode.com/2021/day/3
+from parser import Parser
+import numpy as np
+
+
 class DiagnosticReport:
-    source_data: list = []
-    gamma: str = ""
-    epsilon: str = ""
-    gamma_rate: str = None
-    epsilon_rate: str = None
-    power_consumption: int = 0
+    _data: list = []
+    gamma_rate: str = ""
+    epsilon_rate: str = ""
 
-    def add_entry(self, entry: str):
-        self.source_data.append([int(entry[x]) for x in range(0, len(entry))])
+    def add_entry(self, input_text: str) -> None:
+        self._data.append([int(input_text[x]) for x in range(0, len(input_text))])
 
-    def calculate_rates(self) -> int:
-        for i in range(0, len(self.source_data[0])):
-            bit_0, bit_1 = 0, 0
-            for item in self.source_data:
-                if item[i] == 0:
-                    bit_0 += 1
-                else:
-                    bit_1 += 1
+    @property
+    def power_consumption(self) -> int:
+        self._recalculate_data()
 
-            if bit_1 > bit_0:
-                self.gamma += "1"
-                self.epsilon += "0"
+        return int(self.gamma_rate, 2) * int(self.epsilon_rate, 2)
+
+    def _recalculate_data(self) -> None:
+        """Recalculate input data"""
+        data_sum_list = sum(map(np.array, self._data))
+        for data_item in data_sum_list:
+            if data_item > len(self._data) / 2:  # More 1 then 0
+                self.gamma_rate += "1"
+                self.epsilon_rate += "0"
             else:
-                self.gamma += "0"
-                self.epsilon += "1"
-
-        self.gamma_rate = int(self.gamma, 2)
-        self.epsilon_rate = int(self.epsilon, 2)
-        self.power_consumption = self.gamma_rate * self.epsilon_rate
+                self.gamma_rate += "0"
+                self.epsilon_rate += "1"
 
 
-class Parser:
-    def data_generator(self) -> tuple[str, int]:
-        with open("input_data.txt") as stream:
-            for line in stream:
-                yield line.removesuffix("\n")
-
-
-parser = Parser()
 report = DiagnosticReport()
-for item in parser.data_generator():
+for item in Parser.get_input_data():
     report.add_entry(item)
-
-report.calculate_rates()
 
 print(f"Result: {report.power_consumption}")
